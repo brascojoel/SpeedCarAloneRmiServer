@@ -163,6 +163,8 @@ public class Core {
     
     
     private Player player;
+    
+   
 
     /**
      * Constructor
@@ -171,7 +173,8 @@ public class Core {
      */
     public Core(ClientInterface client) {
         this.client = client;
-        // scores.put(Color.RED, 0);
+       // SoundGame.init();
+        SoundGame.volume = SoundGame.Volume.LOW;
     }
     
      public Core(Player client) {
@@ -1985,6 +1988,7 @@ public class Core {
 
         bGameFinishing = false;
         bGameInProgress = true;
+       SoundGame.started.play();
     }
 
     public int getScore(){
@@ -1995,15 +1999,19 @@ public class Core {
         switch (choice) {
             case Constants.UP:
                 UP_P = flag;
+                SoundGame.accelerate.play();
                 break;
             case Constants.DOWN:
                 DO_P = flag;
+                SoundGame.brake.play();
                 break;
             case Constants.RIGHT:
                 RI_P = flag;
+                SoundGame.right.play();
                 break;
             case Constants.LEFT:
                 LE_P = flag;
+                SoundGame.left.play();
                 break;
             default:
                 break;
