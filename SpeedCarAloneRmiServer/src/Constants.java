@@ -9,6 +9,6 @@ public final class Constants {
     public static final int SERVER_PORT = 1099;
 
     public static final int PARTY_MAX_CAPACITY = 4;
-    public static final int PARTY_MIN_CAPACITY = 2;
+    public static final int PARTY_MIN_CAPACITY = 1;
 
 }

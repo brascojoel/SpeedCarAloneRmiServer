@@ -24,7 +24,7 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
  
 
      private final Map<Long, Player> clientsById = new HashMap<>();
-
+     private final Map<Long, Core> clientsCoreById = new HashMap<>();
     public GameEngine() throws RemoteException {
         super();
         
@@ -39,11 +39,15 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
      */
     @Override
     public long connect(ClientInterface client) throws RemoteException {
-        Player player = new Player(client.getName(),client, new Core());
+         System.out.println("Nouveau client connecté : " + client);
+        Player player = new Player(client.getName(),client, new Core(client));
 
         if (client != null) {
-             player.getCore().addPlayer(player);
+             System.out.println("id: " +player.getId());
              clientsById.put(player.getId(), player);
+            // player.getCore().addPlayer(player);
+            // clientsById.put(player.getId(), player);
+             clientsCoreById.put(player.getId(), new Core(client));
              System.out.println("Nouveau client connecté : " + client.getName());
             return player.getId();
         }
@@ -60,6 +64,7 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
     @Override
     public void disconnect(long userId) throws RemoteException {
            clientsById.remove(userId);
+           clientsCoreById.remove(userId);
     }
 
   
@@ -75,12 +80,16 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
     public boolean startGame(long userId) throws RemoteException {
         
         Player player = clientsById.get(userId);
+        System.out.println("id : "+userId);
+     
         
+      //  clientsById.put(userId, player);
+      
         boolean flag = false;
         if (player != null) {
-            Core core = player.getCore();
+            Core core =  clientsCoreById.get(userId);
             if (core != null) {
-               
+               // core.addPlayer(player);
                 flag = core.startGame();
                
                 if(flag==true){
@@ -99,7 +108,7 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
     public void newGrid(long userId) throws RemoteException {
         Player client = clientsById.get(userId);
         if (client != null) {
-            Core core = client.getCore();
+            Core core =  clientsCoreById.get(userId);
             if (core != null) {
                 
                 System.out.println("ArenaParty.newGrid()");
@@ -113,9 +122,11 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
     public void beginGame(long userId) throws RemoteException {
        Player client = clientsById.get(userId);
         if (client != null) {
-            Core core = client.getCore();
+           // Core core = client.getCore();
+            Core core =  clientsCoreById.get(userId);
             if (core != null) {
                 core.beginGame();
+               
                 System.out.println("ArenaParty.beginGame() lancé partie client");
             }
         }
@@ -126,7 +137,8 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
 
        Player client = clientsById.get(userId);
         if (client != null) {
-            Core core = client.getCore();
+            //Core core = client.getCore();
+            Core core =  clientsCoreById.get(userId);
             if (core!= null) {
                 core.moveCar(choice, flag);
 
@@ -139,7 +151,8 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
         int x=0;
         Player client = clientsById.get(userId);
         if (client != null) {
-            Core core = client.getCore();
+            //Core core = client.getCore();
+            Core core =  clientsCoreById.get(userId);
             if (core != null) {
                 x = core.getScore();
                 client.setScore(x);

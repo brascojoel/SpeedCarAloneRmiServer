@@ -3,6 +3,8 @@ import java.rmi.RemoteException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,7 +20,7 @@ public class Player extends Iplayer {
     /**
      * Utiliser le RMI pour communiquer avec le client
      */
-    private final ClientInterface client;
+    private ClientInterface client;
    
     /**
      * Pour ne pas faire deux threads en même temps
@@ -34,8 +36,9 @@ public class Player extends Iplayer {
     public Player(String name, ClientInterface client, Core core) {
         super(name);
         //this.party = party;
-        setCore(core);
         this.client = client;
+        setCore(core);
+        
     }
 
    /**
@@ -57,6 +60,16 @@ public class Player extends Iplayer {
                 @Override
                 public void run() {
                     try {
+                        System.out.println(".run()"+client);
+                        System.out.println(".run() vDisplayRoad : "+vDisplayRoad);
+                        System.out.println(".run() vDisplayObstacles :"+vDisplayObstacles);
+                        System.out.println(".run() vDisplayCars : "+vDisplayCars);
+                        System.out.println(".run() myCar : "+myCar);
+                        System.out.println(".run() pos : "+pos);
+                        System.out.println(".run() nbParticipants : "+nbParticipants);
+                        System.out.println(".run() bGameOver : "+bGameOver);
+                        System.out.println(".run() sPosition : "+sPosition);
+                      //  System.out.println(".run() bGameOver : "+bGameOver);
                         client.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, myCar, pos, nbParticipants, bGameOver, sPosition);
                     } catch (RemoteException ex) {
                         // Si ca plante, probablement que le client s'est deconnecté
@@ -68,6 +81,24 @@ public class Player extends Iplayer {
             };
             updateThread.start();
         }
+    }
+
+    @Override
+    public void setPlayerButton(boolean flag) {
+        try {
+            client.setPlayButton(flag);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void setClient(ClientInterface client) {
+        System.out.println("Modification de client");
+        this.client = client;
+    }
+
+    public ClientInterface getClient() {
+        return client;
     }
 
   

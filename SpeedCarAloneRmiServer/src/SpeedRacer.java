@@ -1,5 +1,4 @@
 
-import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -22,6 +21,15 @@ public class SpeedRacer {
 
     public static void main(String[] args) {
 
+        
+         try {
+            Registry registry = LocateRegistry.createRegistry(Constants.SERVER_PORT);
+             GameEngine gameEngine = new GameEngine();
+            registry.rebind(Constants.SERVER_PATH, gameEngine);
+            System.out.println("RMI Server started");
+        } catch (RemoteException ex) {
+            //Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
         /*	String portNum, registryURL;
             
             try {
@@ -34,7 +42,7 @@ public class SpeedRacer {
         } catch (RemoteException ex) {
             Logger.getLogger(SpeedRacer.class.getName()).log(Level.SEVERE, null, ex);
         }*/
-        String portNum, registryURL;
+      /*  String portNum, registryURL;
 
         try {
 
@@ -54,7 +62,7 @@ public class SpeedRacer {
         catch (Exception re) {
             System.out.println(
                     "Exception in LightBikesServer.main: " + re);
-        } // end catch
+        }*/ // end catch
 
     } // end main
 

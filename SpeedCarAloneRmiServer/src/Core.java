@@ -3,10 +3,13 @@
  * and open the template in the editor.
  */
 
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Performs most of the computations
@@ -171,6 +174,10 @@ public class Core {
         // scores.put(Color.RED, 0);
     }
     
+     public Core(Player client) {
+        this.player = client;
+        // scores.put(Color.RED, 0);
+    }
    /* public Core(Player player) {
         this.player = player;
         // scores.put(Color.RED, 0);
@@ -512,6 +519,15 @@ public class Core {
         newGrid();
 
         iTickDelay = computeTickValueForCurrentSystem();
+        
+       try {
+            System.out.println("Core.runGame() ");
+            client.setPlayButton(true);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+         System.out.println("runGame player : "+player);
         /*    try {
             gGUI.setEnabled(true);
         } catch (RemoteException ex) {
@@ -577,15 +593,25 @@ public class Core {
                             client.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
                            
                         });*/
-                    javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
+                 
+                       javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
                         @Override
                         public void run() {
-                            
-                               player.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
-                           
+                            try {
+                                  client.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
+                  
+                         } catch (RemoteException ex) {
+                                Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
-                    });
-                    
+                    }); 
+                             System.out.println(".run() in runGame() ");
+                           
+                          //  client.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
+                  
+                          //  System.out.println(".run() in runGame() ");
+                         //   player.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
+                  
                     //Ask the GUI to perform its update
                   /*  javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
                         @Override
@@ -618,11 +644,11 @@ public class Core {
                                   scores.put(currentPlayer.getName(), score + currentPlayer.getScore());
                             }
                         }*/
-                       // score += Math.pow(vCars.elementAt(0).ySpeed, 2);
+                        score += Math.pow(vCars.elementAt(0).ySpeed, 2);
                       
-                       score = (int) (player.getScore() + Math.pow(vCars.elementAt(0).ySpeed, 2));
+                       /*score = (int) (player.getScore() + Math.pow(vCars.elementAt(0).ySpeed, 2));
                             
-                        player.setScore(score);
+                        player.setScore(score);*/
                     }
                 }
             } catch (Exception e) {

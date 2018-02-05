@@ -65,6 +65,7 @@ public abstract class Iplayer {
     public abstract void update(Vector<Rectangle> vDisplayRoad, Vector<Rectangle> vDisplayObstacles, Vector<Rectangle> vDisplayCars, Car myCar, int pos, int nbParticipants, boolean bGameOver, String sPosition) throws java.rmi.RemoteException;
 
   
+    public abstract void setPlayerButton(boolean flag);
 
     /**
      * Retourne l'id unique du client
