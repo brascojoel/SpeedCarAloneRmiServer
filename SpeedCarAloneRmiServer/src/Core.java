@@ -165,7 +165,7 @@ public class Core {
     private Player player;
     
    
-
+   private SoundGame started,brake,left, right, accelerate;
     /**
      * Constructor
      *
@@ -173,6 +173,7 @@ public class Core {
      */
     public Core(ClientInterface client) {
         this.client = client;
+        
        // SoundGame.init();
         SoundGame.volume = SoundGame.Volume.LOW;
     }
@@ -419,8 +420,9 @@ public class Core {
                     if (gameRunTime % gameMaxRunTime == 0 && bGameInProgress == true) {
 
                         //Move the cars according to their speed, acceleration and to the pressed keys (for player car only)
-                        moveCars(UP_P, DO_P, LE_P, RI_P, vCars);
+                       // moveCars(UP_P, DO_P, LE_P, RI_P, vCars);
 
+                       player.moveCars(bGameFinishing,bGameInProgress,UP_P, DO_P, LE_P, RI_P, vCars);
                         //Manage the collisions (the finish line is a CollidableRectangle, so it also tells whether the game must end soon)
                         bGameFinishing = manageCollisions(vCars, vTabObstacles, bGameFinishing);
 
@@ -523,12 +525,12 @@ public class Core {
 
         iTickDelay = computeTickValueForCurrentSystem();
         
-       try {
+      /* try {
             System.out.println("Core.runGame() ");
             client.setPlayButton(true);
         } catch (RemoteException ex) {
             Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         
          System.out.println("runGame player : "+player);
         /*    try {
@@ -597,7 +599,7 @@ public class Core {
                            
                         });*/
                  
-                       javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
+                   /*    javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
                         @Override
                         public void run() {
                             try {
@@ -607,13 +609,13 @@ public class Core {
                                 Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-                    }); 
+                    }); */
                              System.out.println(".run() in runGame() ");
                            
                           //  client.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
                   
                           //  System.out.println(".run() in runGame() ");
-                         //   player.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
+                            player.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
                   
                     //Ask the GUI to perform its update
                   /*  javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
@@ -647,11 +649,11 @@ public class Core {
                                   scores.put(currentPlayer.getName(), score + currentPlayer.getScore());
                             }
                         }*/
-                        score += Math.pow(vCars.elementAt(0).ySpeed, 2);
+                      //  score += Math.pow(vCars.elementAt(0).ySpeed, 2);
                       
-                       /*score = (int) (player.getScore() + Math.pow(vCars.elementAt(0).ySpeed, 2));
+                        score = (int) (player.getScore() + Math.pow(vCars.elementAt(0).ySpeed, 2));
                             
-                        player.setScore(score);*/
+                        player.setScore(score);
                     }
                 }
             } catch (Exception e) {
@@ -1982,19 +1984,23 @@ public class Core {
         }
         bGameQuit = true;
         bGameInProgress = false;
+       
+        System.out.println("Jeu arrêté");
     }
 
     public void beginGame() {
 
         bGameFinishing = false;
         bGameInProgress = true;
+        //score = 0;
+        player.setScore(0);
        SoundGame.started.play();
     }
 
-    public int getScore(){
-       return score;
+    public synchronized  int getScore(){
+       return player.getScore();
     }
-    public void moveCar(String choice, boolean flag) {
+    public  synchronized  void moveCar(String choice, boolean flag) {
 
         switch (choice) {
             case Constants.UP:

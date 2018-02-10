@@ -54,20 +54,25 @@ public class SoundGame {
       }
    }
    
-   // Play or Re-play the sound effect from the beginning, by rewinding.
-   public void play() {
+   /**
+    * Jouer la music
+    */
+   public synchronized void play() {
       if (volume != Volume.MUTE) {
          if (clip.isRunning())
             clip.stop();   // Stop the player if it is still running
-         clip.setFramePosition(0); // rewind to the beginning
+          clip.setFramePosition(0); // rewind to the beginning
+          System.out.println(" long : "+clip.getFrameLength());
+       //  clip.setLoopPoints(4000,6000);
          clip.start();     // Start playing
       }
    }
    
-   // Optional static method to pre-load all the sound files.
-   /*static void init() {
-      values(); // calls the constructor for all the elements
-   }*/
+    public void stop() {
+     clip.stop();
+     clip.close();
+   }
+  
     
     
 }

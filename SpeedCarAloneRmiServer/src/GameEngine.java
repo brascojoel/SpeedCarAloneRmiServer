@@ -47,7 +47,7 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
              clientsById.put(player.getId(), player);
             // player.getCore().addPlayer(player);
             // clientsById.put(player.getId(), player);
-             clientsCoreById.put(player.getId(), new Core(client));
+             clientsCoreById.put(player.getId(), new Core( player));
              System.out.println("Nouveau client connecté : " + client.getName());
             return player.getId();
         }
@@ -63,8 +63,25 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
      */
     @Override
     public void disconnect(long userId) throws RemoteException {
-           clientsById.remove(userId);
-           clientsCoreById.remove(userId);
+        
+          
+        Player player = clientsById.get(userId);
+     
+      
+      
+        if (player != null) {
+            Core core =  clientsCoreById.get(userId);
+            if (core != null) {
+               
+                core.stopGame();
+                clientsById.remove(userId);
+                clientsCoreById.remove(userId);
+                
+                System.out.println(" "+player.getName()+" déconnecté");
+             
+            }
+        }
+          
     }
 
   
