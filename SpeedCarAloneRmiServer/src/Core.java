@@ -3,13 +3,10 @@
  * and open the template in the editor.
  */
 
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Performs most of the computations
