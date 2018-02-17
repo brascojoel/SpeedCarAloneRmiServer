@@ -2,9 +2,7 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Vector;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,13 +19,15 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
      * une liste des clients par leurs id, pour les retrouver quand ils
      * communiquent avec le serveur
      */
- 
+    private final Map<Long, Player> clientsById = new HashMap<>();
+    /**
+     * une liste des Cores par  id des clients
+     */
+    private final Map<Long, Core> clientsCoreById = new HashMap<>();
 
-     private final Map<Long, Player> clientsById = new HashMap<>();
-     private final Map<Long, Core> clientsCoreById = new HashMap<>();
     public GameEngine() throws RemoteException {
         super();
-        
+
     }
 
     /**
@@ -39,16 +39,15 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
      */
     @Override
     public long connect(ClientInterface client) throws RemoteException {
-         System.out.println("Nouveau client connecté : " + client);
-        Player player = new Player(client.getName(),client, new Core(client));
+        System.out.println("Nouveau client connecté : " + client);
+        Player player = new Player(client.getName(), client, new Core(client));
 
         if (client != null) {
-             System.out.println("id: " +player.getId());
-             clientsById.put(player.getId(), player);
-            // player.getCore().addPlayer(player);
-            // clientsById.put(player.getId(), player);
-             clientsCoreById.put(player.getId(), new Core( player));
-             System.out.println("Nouveau client connecté : " + client.getName());
+
+            clientsById.put(player.getId(), player);
+
+            clientsCoreById.put(player.getId(), new Core(player));
+            System.out.println("Nouveau client connecté : " + client.getName());
             return player.getId();
         }
         System.out.println("Erreur de connexion du client : " + client.getName());
@@ -63,88 +62,81 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
      */
     @Override
     public void disconnect(long userId) throws RemoteException {
-        
-          
+
         Player player = clientsById.get(userId);
-     
-      
-      
+
         if (player != null) {
-            Core core =  clientsCoreById.get(userId);
+            Core core = clientsCoreById.get(userId);
             if (core != null) {
-               
+
                 core.stopGame();
                 clientsById.remove(userId);
                 clientsCoreById.remove(userId);
-                
-                System.out.println(" "+player.getName()+" déconnecté");
-             
+
+                System.out.println(" " + player.getName() + " déconnecté");
+
             }
         }
-          
+
     }
 
-  
     /**
-     * Démarre une partie, pour ça le client a du se connecter à une arena et
-     * choisir sa couleur
-     *
+     * Démarre une partie
      * @param userId
      * @return
      * @throws RemoteException
      */
     @Override
     public boolean startGame(long userId) throws RemoteException {
-        
+
         Player player = clientsById.get(userId);
-        System.out.println("id : "+userId);
-     
-        
-      //  clientsById.put(userId, player);
-      
+
         boolean flag = false;
         if (player != null) {
-            Core core =  clientsCoreById.get(userId);
+            Core core = clientsCoreById.get(userId);
             if (core != null) {
-               // core.addPlayer(player);
+
                 flag = core.startGame();
-               
-                if(flag==true){
-                     System.out.println("ArenaParty.startGame() reussi");
-                }
-                else
-                     System.out.println("ArenaParty.startGame() a échoué" );
+
             }
         }
-       
+
         return flag;
     }
 
-  
+    /**
+     * Initialiser la partie
+     * @param userId
+     * @throws RemoteException 
+     */
     @Override
     public void newGrid(long userId) throws RemoteException {
         Player client = clientsById.get(userId);
         if (client != null) {
-            Core core =  clientsCoreById.get(userId);
+            Core core = clientsCoreById.get(userId);
             if (core != null) {
-                
-                System.out.println("ArenaParty.newGrid()");
+
+               
                 core.newGrid();
 
             }
         }
     }
 
+    /**
+     * Lancer le jeu
+     * @param userId
+     * @throws RemoteException 
+     */
     @Override
     public void beginGame(long userId) throws RemoteException {
-       Player client = clientsById.get(userId);
+        Player client = clientsById.get(userId);
         if (client != null) {
-           // Core core = client.getCore();
-            Core core =  clientsCoreById.get(userId);
+
+            Core core = clientsCoreById.get(userId);
             if (core != null) {
                 core.beginGame();
-               
-                System.out.println("ArenaParty.beginGame() lancé partie client");
+
             }
         }
     }
@@ -152,11 +144,11 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
     @Override
     public void moveCar(long userId, String choice, boolean flag) throws RemoteException {
 
-       Player client = clientsById.get(userId);
+        Player client = clientsById.get(userId);
         if (client != null) {
-            //Core core = client.getCore();
-            Core core =  clientsCoreById.get(userId);
-            if (core!= null) {
+
+            Core core = clientsCoreById.get(userId);
+            if (core != null) {
                 core.moveCar(choice, flag);
 
             }
@@ -165,11 +157,11 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
 
     @Override
     public int getScoreClient(long userId) throws RemoteException {
-        int x=0;
+        int x = 0;
         Player client = clientsById.get(userId);
         if (client != null) {
-            //Core core = client.getCore();
-            Core core =  clientsCoreById.get(userId);
+
+            Core core = clientsCoreById.get(userId);
             if (core != null) {
                 x = core.getScore();
                 client.setScore(x);
@@ -177,10 +169,7 @@ public class GameEngine extends UnicastRemoteObject implements GameEngineInterfa
 
             }
         }
-       return client.getScore();
+        return client.getScore();
     }
 
-   
-
-    
 }

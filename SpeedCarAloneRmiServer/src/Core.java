@@ -174,18 +174,14 @@ public class Core {
     public Core(ClientInterface client) {
         this.client = client;
         
-       // SoundGame.init();
         SoundGame.volume = SoundGame.Volume.LOW;
     }
     
      public Core(Player client) {
         this.player = client;
-        // scores.put(Color.RED, 0);
+      
     }
-   /* public Core(Player player) {
-        this.player = player;
-        // scores.put(Color.RED, 0);
-    } */
+  
      public Core() {
        
     }
@@ -420,10 +416,9 @@ public class Core {
                     if (gameRunTime % gameMaxRunTime == 0 && bGameInProgress == true) {
 
                         //Move the cars according to their speed, acceleration and to the pressed keys (for player car only)
-                       // moveCars(UP_P, DO_P, LE_P, RI_P, vCars);
+                    
+                      moveCars(player.isUP_P(), player.isDO_P(), player.isLE_P(), player.isRI_P(), vCars);
 
-                       player.moveCars(bGameFinishing,bGameInProgress,UP_P, DO_P, LE_P, RI_P, vCars);
-                        //Manage the collisions (the finish line is a CollidableRectangle, so it also tells whether the game must end soon)
                         bGameFinishing = manageCollisions(vCars, vTabObstacles, bGameFinishing);
 
                         //Re-initialize the vectors for display rectangles
@@ -463,28 +458,11 @@ public class Core {
                     if (runTime == 20) {
                         runTime = 0;
                         if (bGameInProgress == true) {
-                         //   score += Math.pow(vCars.elementAt(0).ySpeed, 2);
-
-                      /*  Iterator<Player> j = clients.iterator();
-                        while (j.hasNext()) {
-                            Player currentPlayer = j.next();
-                            if (currentPlayer.getId()== player.getId()) {
-                                //Aller chercher le score de la couleur
-                                //Lui rajouter le nombre de tileCourant
-                               score = (int) (player.getScore() + Math.pow(vCars.elementAt(0).ySpeed, 2));
-                            
-                                 player.setScore(score);
-                                  scores.put(currentPlayer.getName(), score + currentPlayer.getScore());
-                            }
-                        } */
+                     
                             score = (int) (player.getScore() + Math.pow(vCars.elementAt(0).ySpeed, 2));
                             
                             player.setScore(score);
-                            //score = 
-                            //Aller chercher le score de la couleur
-                            //Lui rajouter le nombre de tileCourant
-                            // int currentScore = scores.get(i);
-                            // scores.put(currentTile.BacColor, currentScore + currentTile.Nb);
+                           
                         }
                     }
                 } catch (Exception e) {
@@ -524,20 +502,7 @@ public class Core {
         newGrid();
 
         iTickDelay = computeTickValueForCurrentSystem();
-        
-      /* try {
-            System.out.println("Core.runGame() ");
-            client.setPlayButton(true);
-        } catch (RemoteException ex) {
-            Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-        
-         System.out.println("runGame player : "+player);
-        /*    try {
-            gGUI.setEnabled(true);
-        } catch (RemoteException ex) {
-            Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
-        } */
+   
 
         //Initializes the game status booleans
         bGameQuit = false;
@@ -557,8 +522,9 @@ public class Core {
                 if (gameRunTime % gameMaxRunTime == 0 && bGameInProgress == true) {
 
                     //Move the cars according to their speed, acceleration and to the pressed keys (for player car only)
-                    moveCars(UP_P, DO_P, LE_P, RI_P, vCars);
-
+                
+                     moveCars(player.isUP_P(), player.isDO_P(), player.isLE_P(), player.isRI_P(), vCars);
+                    
                     //Manage the collisions (the finish line is a CollidableRectangle, so it also tells whether the game must end soon)
                     bGameFinishing = manageCollisions(vCars, vTabObstacles, bGameFinishing);
 
@@ -592,42 +558,9 @@ public class Core {
                         }
                         iFinalPosition = pos;
                     }
-
-                    
-                     /*clients.forEach(client -> {
-                            client.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
-                           
-                        });*/
-                 
-                   /*    javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                  client.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
-                  
-                         } catch (RemoteException ex) {
-                                Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                    }); */
-                             System.out.println(".run() in runGame() ");
-                           
-                          //  client.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
-                  
-                          //  System.out.println(".run() in runGame() ");
+            
                             player.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
-                  
-                    //Ask the GUI to perform its update
-                  /*  javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                gGUI.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, vCars.elementAt(0), iFinalPosition, iNbParticipants, bGameFinishing, sFinalPosition);
-                            } catch (RemoteException ex) {
-                                Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                    }); */
+                 
 
                 }
 
@@ -636,20 +569,6 @@ public class Core {
                     runTime = 0;
                     if (bGameInProgress == true) {
                         
-                        
-                      /*   Iterator<Player> j = clients.iterator();
-                        while (j.hasNext()) {
-                            Player currentPlayer = j.next();
-                            if (currentPlayer.getId()== player.getId()) {
-                                //Aller chercher le score de la couleur
-                                //Lui rajouter le nombre de tileCourant
-                               score = (int) (player.getScore() + Math.pow(vCars.elementAt(0).ySpeed, 2));
-                            
-                                 player.setScore(score);
-                                  scores.put(currentPlayer.getName(), score + currentPlayer.getScore());
-                            }
-                        }*/
-                      //  score += Math.pow(vCars.elementAt(0).ySpeed, 2);
                       
                         score = (int) (player.getScore() + Math.pow(vCars.elementAt(0).ySpeed, 2));
                             
@@ -842,12 +761,8 @@ public class Core {
         rb[1] = findIntersection(new Rectangle(myCar.x + 10, myCar.y, 12, 21, 6), rInter) != null;
         rb[2] = findIntersection(new Rectangle(myCar.x + 22, myCar.y, 10, 21, 6), rInter) != null;
         rb[3] = findIntersection(new Rectangle(myCar.x, myCar.y + 21, 10, 22, 6), rInter) != null;
-        //rb[4] = findIntersection(new Rectangle(myCar.x+10,myCar.y+21,12,22,6),rInter) != null;
         rb[5] = findIntersection(new Rectangle(myCar.x + 22, myCar.y + 21, 10, 22, 6), rInter) != null;
-        //rb[6] = findIntersection(new Rectangle(myCar.x,myCar.y+43,10,21,6),rInter) != null;
-        //rb[7] = findIntersection(new Rectangle(myCar.x+10,myCar.y+43,12,21,6),rInter) != null;
-        //rb[8] = findIntersection(new Rectangle(myCar.x+22,myCar.y+43,10,21,6),rInter) != null;
-
+       
         return rb;
     }
 
@@ -861,7 +776,7 @@ public class Core {
      * @param RI_P True if the right arrow is being pressed
      * @param vCars The vector of cars to move
      */
-    public void moveCars(boolean UP_P, boolean DO_P, boolean LE_P, boolean RI_P, Vector<Car> vCars) {
+    public  synchronized void moveCars(boolean UP_P, boolean DO_P, boolean LE_P, boolean RI_P, Vector<Car> vCars) {
         //Extract the player's car (always at position 0 in the vector!)
         Car myCar = vCars.elementAt(0);
 
@@ -1435,7 +1350,7 @@ public class Core {
             vRoad.add(new Rectangle(242, offset, 4, 200, 3)); //Bord à droite bis
             vRoad.add(new Rectangle(158, offset, 84, 400, 1)); //Route noire
             vRoad.add(new Rectangle(246, offset + 200, 40, 400, 1)); //Route noire bis
-            //vRoad.add(new Rectangle(154,offset,4,400,2)); //Séparateur témoin 1
+           
             vRoad.add(new Rectangle(198, offset, 4, 400, 2)); //Séparateur témoin 2
             vRoad.add(new Rectangle(242, offset + 200, 4, 200, 2)); //Séparateur témoin 3
 
@@ -1628,8 +1543,7 @@ public class Core {
             vRoad.add(new Rectangle(158, offset, 84, 200, 1)); //Route noire bis
             vRoad.add(new Rectangle(154, offset + 200, 4, 200, 2)); //Séparateur témoin 1
             vRoad.add(new Rectangle(198, offset, 4, 400, 2)); //Séparateur témoin 2
-            //vRoad.add(new Rectangle(242,offset,4,400,2)); //Séparateur témoin 3
-
+         
             for (int i = 0; i < 5; i++) {
                 vRoad.add(new Rectangle(198, offset + 28 + (i * 40), 4, 12, 1)); //Repasser de la route dessus
             }
@@ -1682,7 +1596,7 @@ public class Core {
             vRoad.add(new Rectangle(114, offset, 11, 100, 1)); //Route noire pent
             vRoad.add(new Rectangle(154, offset, 4, 240, 2)); //Séparateur témoin 1
             vRoad.add(new Rectangle(198, offset, 4, 400, 2)); //Séparateur témoin 2
-            // vRoad.add(new Rectangle(242,offset,4,400,2)); //Séparateur témoin 3
+           
 
             for (int i = 0; i < 6; i++) {
                 vRoad.add(new Rectangle(154, offset + 28 + (i * 40), 48, 12, 1)); //Repasser de la route dessus
@@ -1728,7 +1642,7 @@ public class Core {
             vRoad.add(new Rectangle(253, offset, 11, 200, 1)); //Route noire ter
             vRoad.add(new Rectangle(264, offset, 11, 150, 1)); //Route noire quad
             vRoad.add(new Rectangle(275, offset, 11, 100, 1)); //Route noire pent
-            //vRoad.add(new Rectangle(154,offset,4,400,2)); //Séparateur témoin 1
+          
             vRoad.add(new Rectangle(198, offset, 4, 400, 2)); //Séparateur témoin 2
             vRoad.add(new Rectangle(242, offset, 4, 240, 2)); //Séparateur témoin 3
 
@@ -1761,9 +1675,9 @@ public class Core {
             vRoad.add(new Rectangle(154, offset, 4, 400, 3)); //Bord à gauche
             vRoad.add(new Rectangle(242, offset, 4, 400, 3)); //Bord à droite
             vRoad.add(new Rectangle(158, offset, 84, 400, 1)); //Route noire
-            //vRoad.add(new Rectangle(154,offset,4,400,2)); //Séparateur témoin 1
+         
             vRoad.add(new Rectangle(198, offset, 4, 400, 2)); //Séparateur témoin 2
-            //vRoad.add(new Rectangle(242,offset,4,400,2)); //Séparateur témoin 3
+            
 
             for (int i = 0; i < 10; i++) {
                 vRoad.add(new Rectangle(198, offset + 28 + (i * 40), 4, 12, 1)); //Repasser de la route dessus
@@ -1784,36 +1698,7 @@ public class Core {
             //Les autres, juste pour débugger à son aise
             System.out.println("Noting planned for ID : " + iSegmentId);
             System.exit(1);
-            /*CollidableRectangle crTemp;
-            vRoad.add(crTemp = new CollidableRectangle(0,offset,110,400,0,2));  //Herbe à gauche
-
-            vObstacles.add(crTemp);
-            vRoad.add(crTemp = new CollidableRectangle(290,offset,110,400,0,2)); //Herbe à droite
-            vObstacles.add(crTemp);
-            vRoad.add(new Rectangle(110,offset,4,400,3)); //Bord à gauche
-            vRoad.add(new Rectangle(286,offset,4,400,3)); //Bord à droite
-            vRoad.add(new Rectangle(114,offset,172,400,1)); //Route noire
-            vRoad.add(new Rectangle(154,offset,4,400,2)); //Séparateur témoin 1
-            vRoad.add(new Rectangle(198,offset,4,400,2)); //Séparateur témoin 2
-            vRoad.add(new Rectangle(242,offset,4,400,2)); //Séparateur témoin 3
-
-            for(int i = 0; i < 10; i++)
-            {
-                vRoad.add(new Rectangle(154,offset+28+(i*40),92,12,1)); //Repasser de la route dessus
-            }
-
-
-            //Les arbres
-            for(int i = 0; i < 2; i++)
-            {
-                crTemp = new CollidableRectangle(25,offset+100+(i*200),59,64,4,0);
-                vRoad.add(crTemp);
-                vObstacles.add(crTemp);
-                crTemp = new CollidableRectangle(325,offset+100+(i*200),59,64,4,0);
-                vRoad.add(crTemp);
-                vObstacles.add(crTemp);
-
-            }*/
+         
         }
     }
 
@@ -1928,16 +1813,13 @@ public class Core {
   
 
     /**
-     * Démarre une partie, si au moins un joueur est connecté et si tous les
-     * joueurs on choisi leur couleur
+     * Démarre une partie
      *
      * @return
      */
     public boolean startGame() {
-        // On ne démarre que si on a au moins 1 joueurs et qu'il a choisi sa couleur
-       
-       // if (!bGameQuit && !bGameInProgress && clients.size() > 0) {
-           if (!bGameQuit && !bGameInProgress ) {
+      
+        if (!bGameQuit && !bGameInProgress ) {
              
             Thread game = new Thread() {
                 @Override
@@ -1992,7 +1874,6 @@ public class Core {
 
         bGameFinishing = false;
         bGameInProgress = true;
-        //score = 0;
         player.setScore(0);
        SoundGame.started.play();
     }
@@ -2000,23 +1881,28 @@ public class Core {
     public synchronized  int getScore(){
        return player.getScore();
     }
-    public  synchronized  void moveCar(String choice, boolean flag) {
+    
+    public  void moveCar(String choice, boolean flag) {
 
         switch (choice) {
             case Constants.UP:
-                UP_P = flag;
+             
+                player.setUP_P(flag);
                 SoundGame.accelerate.play();
                 break;
             case Constants.DOWN:
-                DO_P = flag;
+             
+                player.setDO_P(flag);
                 SoundGame.brake.play();
                 break;
             case Constants.RIGHT:
-                RI_P = flag;
+              
+                player.setRI_P(flag);
                 SoundGame.right.play();
                 break;
             case Constants.LEFT:
-                LE_P = flag;
+             
+                player.setLE_P(flag);
                 SoundGame.left.play();
                 break;
             default:

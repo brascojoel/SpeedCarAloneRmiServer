@@ -21,7 +21,7 @@ public class Player extends Iplayer {
      * Utiliser le RMI pour communiquer avec le client
      */
     private ClientInterface client;
-   
+
     /**
      * Pour ne pas faire deux threads en même temps
      */
@@ -38,20 +38,21 @@ public class Player extends Iplayer {
         //this.party = party;
         this.client = client;
         setCore(core);
-        
+
     }
 
-   /**
-    * Pour mettre à jour l'affichage d'un client
-    * @param vDisplayRoad
-    * @param vDisplayObstacles
-    * @param vDisplayCars
-    * @param myCar
-    * @param pos
-    * @param nbParticipants
-    * @param bGameOver
-    * @param sPosition 
-    */
+    /**
+     * Pour mettre à jour l'affichage d'un client
+     *
+     * @param vDisplayRoad
+     * @param vDisplayObstacles
+     * @param vDisplayCars
+     * @param myCar
+     * @param pos
+     * @param nbParticipants
+     * @param bGameOver
+     * @param sPosition
+     */
     @Override
     public void update(Vector<Rectangle> vDisplayRoad, Vector<Rectangle> vDisplayObstacles, Vector<Rectangle> vDisplayCars, Car myCar, int pos, int nbParticipants, boolean bGameOver, String sPosition) {
         if (updateThread == null || updateThread.getState() == Thread.State.TERMINATED) {
@@ -60,21 +61,10 @@ public class Player extends Iplayer {
                 @Override
                 public void run() {
                     try {
-                        System.out.println(".run()"+client);
-                        System.out.println(".run() vDisplayRoad : "+vDisplayRoad);
-                        System.out.println(".run() vDisplayObstacles :"+vDisplayObstacles);
-                        System.out.println(".run() vDisplayCars : "+vDisplayCars);
-                        System.out.println(".run() myCar : "+myCar);
-                        System.out.println(".run() pos : "+pos);
-                        System.out.println(".run() nbParticipants : "+nbParticipants);
-                        System.out.println(".run() bGameOver : "+bGameOver);
-                        System.out.println(".run() sPosition : "+sPosition);
-                      //  System.out.println(".run() bGameOver : "+bGameOver);
+
                         client.update(vDisplayRoad, vDisplayObstacles, vDisplayCars, myCar, pos, nbParticipants, bGameOver, sPosition);
                     } catch (RemoteException ex) {
-                        // Si ca plante, probablement que le client s'est deconnecté
-                        // On le retire alors de la partie
-                      //  party.disconnect(getId());
+
                         System.out.println(".run() dans update player");
                     }
                 }
@@ -100,7 +90,5 @@ public class Player extends Iplayer {
     public ClientInterface getClient() {
         return client;
     }
-
-  
 
 }
